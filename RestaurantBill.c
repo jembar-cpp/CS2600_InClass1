@@ -1,15 +1,9 @@
 /** RestaurantBill.c
  * 
- * TODO:
- * Add random meal cost, choose from values $9.95, $4.55, $13.25, $22.35
- * Calculate cost with tax and tip
- * Format and display meal cost, tax amount, tip amount, total bill
- * 
- * Output format example:
- * Meal cost: $9.95
- * Tax amount: 10%
- * Tip amount: 15%
- * Total: $12.59
+ * Calculates the total cost of a randomly-selected meal based on tax and tip.
+ * Tip is on the post-tax amount of the meal.
+ * Tax and tip are specified as command-line arguments, with or without a percent symbol.
+ * Tax and tip are assumed to be integer amounts (10% or 15%, not 17.5%).
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,4 +28,10 @@ int main(int argc, char *argv[]) {
     // Calculate final (tip is on the post-tax amount)
     float finalCost = mealCost + (mealCost * tax);
     finalCost += finalCost * tip;
+
+    // Print formatted results
+    printf("Meal cost: $%.2f\n", mealCost);
+    printf("Tax amount: %.0f%%\n", tax * 100);
+    printf("Tip amount: %.0f%%\n", tip * 100);
+    printf("Total: $%.2f\n", finalCost);
 }
