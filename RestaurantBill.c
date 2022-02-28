@@ -30,4 +30,8 @@ int main(int argc, char *argv[]) {
     srand(time(NULL)); // use time for a random seed
     float mealCosts[4] = {9.95, 4.55, 13.25, 22.35};
     float mealCost = mealCosts[rand() % 4];
+
+    // Calculate final (tip is on the post-tax amount)
+    float finalCost = mealCost + (mealCost * tax);
+    finalCost += finalCost * tip;
 }
