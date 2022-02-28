@@ -16,3 +16,12 @@
  * Tip amount: 15%
  * Total: $12.59
  */
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    if(argc != 3) {
+        printf("Incorrect number of command line arguments specified.");
+        return -1;
+    }
+}
