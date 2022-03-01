@@ -19,21 +19,39 @@
 #include <stdlib.h>
 #include <time.h>
 
+// Changes the max number by asking user input. Returns the new maximum
+int changeMax() {
+    printf("Enter a new max (between 2 and %d)\n",INT_MAX);
+    int input;
+    scanf("%d",&input);
+    fflush(stdin);
+
+    if(input < 2 || input >= INT_MAX) {
+        printf("Enter a valid number.\n",INT_MAX);
+        changeMax();
+    }
+    else {
+        return input;
+    }
+}
+
 // Prints the menu, loops or calls function based on user input
 void printMenu() {
     printf("Press 1 to play a game\n");
     printf("Press 2 to change the max number\n");
     printf("Press 3 to quit\n");
-
     int input;
     scanf("%d",&input);
     fflush(stdin);
     
+    int maxNumber = 10;
+
     switch(input) {
         case 1:
             //startGame()
         case 2:
-            //changeMax()
+            maxNumber = changeMax();
+            printf("%d", maxNumber);
         case 3:
             return;
         default:
