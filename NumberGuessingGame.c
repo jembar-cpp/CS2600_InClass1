@@ -2,18 +2,6 @@
  * 
  * Program which allows the user to guess a number between 1 and 10 (or a different user-specified maximum)
  * 
- * TODO:
- * Implement function to printMenu() to print menu, prompt user input, and act based on input:
- *  - Press 1 to play a game
- *  - Press 2 to change the max number
- *  - Press 3 to quit
- * 
- * Implement function guessNumber(int answer) that loops, asking user to guess the number:
- *  - prints higher or lower based on number
- *  - if user wins, return to menu
- *  - if q is pressed, game ends (counts as loss) and returns to menu
- * 
- * On program end, display all games and how many guesses it took (or if they quit)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,10 +15,14 @@ typedef struct GameResult {
 } GameResult;
 
 // Prints a properly formatted list of results from a GameResult array paramater
-void printResults(GameResult results[8192]) {
-    int len = sizeof(results) / sizeof(GameResult);
-    printf("\nThank you for playing!\nResults:\n");
-    for(int i = 0; i < len; i++) { // loop through array
+void printResults(GameResult results[8192], int numGames) {
+    printf("\nThank you for playing");
+    if(numGames == 0) { // user didn't even play a game...
+        printf("...\nNext time, please play a game!");
+        return;
+    }
+    printf("!\nResults:\n");
+    for(int i = 0; i < numGames; i++) { // loop through array
         GameResult cur = results[i];
         printf("Game %d: ",i+1);
         printf("Correct answer: %d, ",cur.answer);
@@ -45,7 +37,7 @@ void printResults(GameResult results[8192]) {
 
 // Changes the max number by asking user input. Returns the new maximum
 int changeMax() {
-    printf("Enter a new max (between 2 and %d)\n",INT_MAX);
+    printf("Enter a new maximum number (between 2 and %d): ",INT_MAX);
     int input;
     scanf("%d",&input);
     fflush(stdin);
@@ -67,12 +59,13 @@ void startGame(GameResult results[8192], int maxNumber, int gameNumber) {
     int numGuesses = 0;
     int guess;
     char input[20];
+    char *ptr;
 
     // Game loop
     while(1) { // Breaks out of loop when win condition is met or user quits
-        numGuesses++;
-        printf("Enter a guess from 1 to %d: ",maxNumber);
+        printf("Enter a guess from 1 to %d (q to quit): ",maxNumber);
         fgets(input, 20, stdin); // get input from user
+        fflush(stdin);
         if (strlen(input) > 0 && input[strlen(input) - 1] == '\n') { // remove newline from input, if exists
             input[strlen(input) - 1] = '\0';
         }
@@ -82,15 +75,27 @@ void startGame(GameResult results[8192], int maxNumber, int gameNumber) {
             results[gameNumber-1] = r;
             return;
         }
+        int guess = strtol(input, &ptr, 10); // convert guess to integer (base 10), store string part in ptr
 
-        int guess = atoi(input);
-        printf("%d", guess);
+        if(strcmp(ptr, "") != 0 || guess < 1 || guess > maxNumber) { // guess wasn't numeric or out of bounds - invalid
+            printf("Invalid guess - please enter a valid guess between 1 and %d.\n",maxNumber);
+            continue;
+        }
+
+        numGuesses++; // only increment number of guesses for a valid guess
 
         if(guess == answer) { // User won
             printf("Congratulations, you guessed the number in %d guesses.\n",numGuesses);
             GameResult r = {numGuesses, answer};
             results[gameNumber-1] = r;
             return;
+        }
+
+        if(guess > answer) {
+            printf("Guess too high, try again.\n");
+        }
+        else {
+            printf("Guess too low, try again.\n");
         }
     }
 }
@@ -104,39 +109,39 @@ void printMenu() {
 
 // Initializes the game, keeps track of number of games, wins, and maximum number
 void initGame() {
-    printMenu();
     int input;
-    scanf("%d",&input);
-    fflush(stdin);
-    
     int maxNumber = 10;
     int numGames = 0;
     GameResult results[8192]; // maximum number of games
 
-    switch(input) {
-        case 1:
-            numGames++;
-            if(numGames >= 8192) {
-                printf("Maximum number of games reached.\n");
+    while(1) { // loop until user quits
+        printMenu();
+        scanf("%d",&input);
+        fflush(stdin);
+        switch(input) {
+            case 1: // start game
+                numGames++;
+                if(numGames >= 8192) {
+                    printf("Maximum number of games reached.\n");
+                    return;
+                }
+                startGame(results, maxNumber, numGames);
+                break;
+            case 2: // change max guess
+                maxNumber = changeMax();
+                break;
+            case 3: // end program
+                printResults(results, numGames);
                 return;
-            }
-            startGame(results, maxNumber, numGames);
-            break;
-        case 2:
-            maxNumber = changeMax();
-            break;
-        case 3:
-            return;
-        default:
-            printf("Invalid input, please enter a valid input.\n");
-            initGame();
+            default:
+                printf("Invalid input, please enter a valid input.\n");
+                return;
+        }
     }
-    printResults(results);
     return;
 }
 
 int main() {
-    // TODO
     initGame();
 }
 
