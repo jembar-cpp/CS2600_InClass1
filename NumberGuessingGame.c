@@ -26,6 +26,23 @@ typedef struct GameResult {
     int answer;
 } GameResult;
 
+// Prints a properly formatted list of results from a GameResult array paramater
+void printResults(GameResult results[8192]) {
+    int len = sizeof(results) / sizeof(GameResult);
+    printf("\nThank you for playing!\nResults:\n");
+    for(int i = 0; i < len; i++) { // loop through array
+        GameResult cur = results[i];
+        printf("Game %d: ",i+1);
+        printf("Correct answer: %d, ",cur.answer);
+        if (cur.numGuesses == -1) {
+            printf("Number not guessed.");
+        }
+        else {
+            printf("Number of guesses: %d.\n",cur.numGuesses);
+        }
+    }
+}
+
 // Changes the max number by asking user input. Returns the new maximum
 int changeMax() {
     printf("Enter a new max (between 2 and %d)\n",INT_MAX);
@@ -61,15 +78,20 @@ void startGame(GameResult results[8192], int maxNumber, int gameNumber) {
         }
 
         if(strcmp(input,"q") == 0) { // check if user quit
-            // end game
+            GameResult r = {-1, answer}; // count as a loss
+            results[gameNumber-1] = r;
+            return;
         }
+
+        int guess = atoi(input);
+        printf("%d", guess);
 
         if(guess == answer) { // User won
             printf("Congratulations, you guessed the number in %d guesses.\n",numGuesses);
             GameResult r = {numGuesses, answer};
             results[gameNumber-1] = r;
+            return;
         }
-        return;
     }
 }
 
@@ -109,6 +131,8 @@ void initGame() {
             printf("Invalid input, please enter a valid input.\n");
             initGame();
     }
+    printResults(results);
+    return;
 }
 
 int main() {
