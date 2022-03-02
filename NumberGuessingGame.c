@@ -42,7 +42,6 @@ int changeMax() {
     }
 }
 
-
 // Starts the game, writes win statistics to character array and accepts max number as parameter.
 // Requires game number as parameter.
 void startGame(GameResult results[8192], int maxNumber, int gameNumber) {
@@ -64,7 +63,7 @@ void startGame(GameResult results[8192], int maxNumber, int gameNumber) {
         if(strcmp(input,"q") == 0) { // check if user quit
             // end game
         }
-        
+
         if(guess == answer) { // User won
             printf("Congratulations, you guessed the number in %d guesses.\n",numGuesses);
             GameResult r = {numGuesses, answer};
@@ -74,11 +73,16 @@ void startGame(GameResult results[8192], int maxNumber, int gameNumber) {
     }
 }
 
-// Prints the menu, loops or calls function based on user input
+// Prints the formatted menu
 void printMenu() {
     printf("Press 1 to play a game\n");
     printf("Press 2 to change the max number\n");
     printf("Press 3 to quit\n");
+}
+
+// Initializes the game, keeps track of number of games, wins, and maximum number
+void initGame() {
+    printMenu();
     int input;
     scanf("%d",&input);
     fflush(stdin);
@@ -103,12 +107,12 @@ void printMenu() {
             return;
         default:
             printf("Invalid input, please enter a valid input.\n");
-            printMenu();
+            initGame();
     }
 }
 
 int main() {
     // TODO
-    printMenu();
+    initGame();
 }
 
