@@ -18,6 +18,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+
+// Result of a game. If number of guesses is -1, the game was a loss. Otherwise, it was a win.
+typedef struct GameResult {
+    int numGuesses;
+    int answer;
+} GameResult;
 
 // Changes the max number by asking user input. Returns the new maximum
 int changeMax() {
@@ -35,6 +42,38 @@ int changeMax() {
     }
 }
 
+
+// Starts the game, writes win statistics to character array and accepts max number as parameter.
+// Requires game number as parameter.
+void startGame(GameResult results[8192], int maxNumber, int gameNumber) {
+    srand(time(NULL)); // use time for a random seed
+    int answer = (rand() % maxNumber) + 1; // generate random number between 1 and max
+    int numGuesses = 0;
+    int guess;
+    char input[20];
+
+    // Game loop
+    while(1) { // Breaks out of loop when win condition is met or user quits
+        numGuesses++;
+        printf("Enter a guess from 1 to %d: ",maxNumber);
+        fgets(input, 20, stdin); // get input from user
+        if (strlen(input) > 0 && input[strlen(input) - 1] == '\n') { // remove newline from input, if exists
+            input[strlen(input) - 1] = '\0';
+        }
+
+        if(strcmp(input,"q") == 0) { // check if user quit
+            // end game
+        }
+        
+        if(guess == answer) { // User won
+            printf("Congratulations, you guessed the number in %d guesses.\n",numGuesses);
+            GameResult r = {numGuesses, answer};
+            results[gameNumber-1] = r;
+        }
+        return;
+    }
+}
+
 // Prints the menu, loops or calls function based on user input
 void printMenu() {
     printf("Press 1 to play a game\n");
@@ -45,13 +84,21 @@ void printMenu() {
     fflush(stdin);
     
     int maxNumber = 10;
+    int numGames = 0;
+    GameResult results[8192]; // maximum number of games
 
     switch(input) {
         case 1:
-            //startGame()
+            numGames++;
+            if(numGames >= 8192) {
+                printf("Maximum number of games reached.\n");
+                return;
+            }
+            startGame(results, maxNumber, numGames);
+            break;
         case 2:
             maxNumber = changeMax();
-            printf("%d", maxNumber);
+            break;
         case 3:
             return;
         default:
