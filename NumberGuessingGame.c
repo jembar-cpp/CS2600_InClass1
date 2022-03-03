@@ -47,8 +47,17 @@ int changeMax() {
         changeMax();
     }
     else {
+        // TODO: Write new max to file
         return input;
     }
+}
+
+// Reads config file and current returns max number
+int getMax() {
+    char line[20];
+    FILE *fp = fopen("max_number.conf", "r");
+    // TODO
+    fclose(fp);
 }
 
 // Starts the game, writes win statistics to character array and accepts max number as parameter.
@@ -107,10 +116,10 @@ void printMenu() {
     printf("Press 3 to quit\n");
 }
 
-// Initializes the game, keeps track of number of games, wins, and maximum number
+// Initializes the game, keeps track of number of games, and wins
 void initGame() {
     int input;
-    int maxNumber = 10;
+    int maxNumber = getMax();
     int numGames = 0;
     GameResult results[8192]; // maximum number of games
 
@@ -142,6 +151,13 @@ void initGame() {
 }
 
 int main() {
+    // Initialize max number file, create it if it doesn't exist
+    FILE *fp = fopen("max_number.conf", "r");
+    if(fp == NULL) { // file doesn't exist, create it with default max value
+        fp = fopen("max_number.conf", "w");
+        fprintf(fp, "10");
+    }
+    fclose(fp);
     initGame();
 }
 
