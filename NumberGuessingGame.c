@@ -135,7 +135,7 @@ void initGame() {
                 return;
             default:
                 printf("Invalid input, please enter a valid input.\n");
-                return;
+                continue;
         }
     }
     return;
@@ -143,5 +143,6 @@ void initGame() {
 
 int main() {
     initGame();
+    return 0;
 }
 
