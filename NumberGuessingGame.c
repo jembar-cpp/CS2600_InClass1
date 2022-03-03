@@ -47,7 +47,9 @@ int changeMax() {
         changeMax();
     }
     else {
-        // TODO: Write new max to file
+        FILE *fp = fopen("max_number.conf", "w");
+        fprintf(fp, "%d", input);
+        fclose(fp);
         return input;
     }
 }
@@ -56,8 +58,9 @@ int changeMax() {
 int getMax() {
     char line[20];
     FILE *fp = fopen("max_number.conf", "r");
-    // TODO
+    fgets(line, 20, fp);
     fclose(fp);
+    return atoi(line);
 }
 
 // Starts the game, writes win statistics to character array and accepts max number as parameter.
@@ -144,7 +147,7 @@ void initGame() {
                 return;
             default:
                 printf("Invalid input, please enter a valid input.\n");
-                return;
+                continue;
         }
     }
     return;
@@ -159,5 +162,5 @@ int main() {
     }
     fclose(fp);
     initGame();
+    return 0;
 }
-

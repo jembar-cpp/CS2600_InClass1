@@ -20,6 +20,11 @@ int main(int argc, char *argv[]) {
     float tax = atof(argv[1]) / 100;
     float tip = atof(argv[2]) / 100;
 
+    if (tax < 0 || tip < 0) { // user entered invalid number
+        printf("Enter a valid percentage for tax and tip.");
+        return -1;
+    }
+
     // Generate random meal cost
     srand(time(NULL)); // use time for a random seed
     int randIndex = rand() % 4;
@@ -37,4 +42,6 @@ int main(int argc, char *argv[]) {
     printf("Tax amount: $%.2f\n", taxCost);
     printf("Tip amount: $%.2f\n", tipCost);
     printf("Total: $%.2f\n", finalCost);
+
+    return 0;
 }
